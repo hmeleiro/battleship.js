@@ -2,8 +2,9 @@ import React, { useEffect, useContext } from 'react'
 import ScoreBoard from './ScoreBoard'
 import Map from './Map'
 import { GameContext } from '../contexts/GameContext'
+import { Button } from '@chakra-ui/react'
 
-function Board() {
+function Board({ gameState }) {
   const {
     playerOneTurn,
     ships,
@@ -15,24 +16,24 @@ function Board() {
     winner
   } = useContext(GameContext)
 
-  useEffect(() => {
-    const board = window.localStorage.getItem('board')
-    const ships = window.localStorage.getItem('ships')
-    if (ships === 'undefined') {
-      startGame()
-    } else {
-      setBoard(JSON.parse(board))
-      setShips(JSON.parse(ships))
-    }
-  }, [])
+  // useEffect(() => {
+  //   const board = window.localStorage.getItem('board')
+  //   const ships = window.localStorage.getItem('ships')
+  //   if (ships === 'undefined') {
+  //     startGame()
+  //   } else {
+  //     setBoard(JSON.parse(board))
+  //     setShips(JSON.parse(ships))
+  //   }
+  // }, [])
 
-  useEffect(() => {
-    window.localStorage.setItem('board', JSON.stringify(board))
-  }, [board])
+  // useEffect(() => {
+  //   window.localStorage.setItem('board', JSON.stringify(board))
+  // }, [board])
 
-  useEffect(() => {
-    window.localStorage.setItem('ships', JSON.stringify(ships))
-  }, [ships])
+  // useEffect(() => {
+  //   window.localStorage.setItem('ships', JSON.stringify(ships))
+  // }, [ships])
 
   useEffect(() => {
     if (ships) {
@@ -64,7 +65,11 @@ function Board() {
       </div>
     )
   } else {
-    return <></>
+    return (
+      <div className="flex w-[75%] mt-[3%] ml-[3%] h-[100%] items-center justify-center">
+        <Button onClick={startGame}>Empezar partida</Button>
+      </div>
+    )
   }
 }
 

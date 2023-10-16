@@ -8,15 +8,7 @@ function Home({ socket }) {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    localStorage.setItem('userName', userName)
-    setUserName(userName)
-    setRoom(room)
-    socket.emit('join', { userName, room })
-    socket.emit('newUser', { userName, socketID: socket.id, room })
-    socket.on('user-connected', (data) => {
-      console.log(data)
-    })
-    navigate('/room')
+    navigate('room?id=' + room + '&userName=' + userName)
   }
 
   return (
@@ -36,7 +28,7 @@ function Home({ socket }) {
       <label htmlFor="room">Room</label>
       <input
         type="text"
-        minLength={5}
+        minLength={3}
         name="room"
         id="room"
         className="room__input"
