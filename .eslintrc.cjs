@@ -4,19 +4,13 @@ module.exports = {
     es2021: true,
     node: true
   },
-  extends: [
-    'standard',
-    'plugin:react/recommended',
-    'prettier'
-  ],
+  extends: ['standard', 'plugin:react/recommended', 'prettier'],
   overrides: [
     {
       env: {
         node: true
       },
-      files: [
-        '.eslintrc.{js,cjs,jsx}'
-      ],
+      files: ['.eslintrc.{js,cjs,jsx}'],
       parserOptions: {
         sourceType: 'script'
       }
@@ -26,17 +20,16 @@ module.exports = {
     ecmaVersion: 'latest',
     sourceType: 'module'
   },
-  plugins: [
-    'react'
-  ],
+  plugins: ['react'],
   rules: {
-    "indent": ["error", 2],
-    "react/prop-types": "off",
-    "camelcase": [
-      "error",
+    indent: ['error', 2],
+    'react/prop-types': 'off',
+    camelcase: [
+      'error',
       {
-        "properties": "never"
+        properties: 'never'
       }
-    ]
+    ],
+    'spaced-comment': 'never'
   }
 }

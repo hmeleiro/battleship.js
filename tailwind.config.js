@@ -8,6 +8,10 @@ export default {
     extend: {
       gridTemplateColumns: {
         '16': 'repeat(16, minmax(0, 1fr))',
+      },
+      colors: {
+        'player1': '#546d93',
+        'player2': '#e7b557'
       }
     },
   },
