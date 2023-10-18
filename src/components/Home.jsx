@@ -9,16 +9,7 @@ function Home({ socket }) {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    localStorage.setItem('userName', userName)
-    setUserName(userName)
-    setRoom(room)
-    socket.emit('join', { userName, room })
-    socket.on('gameResponse', (data) => {
-      setBoard(data.board)
-      setShips(data.ships)
-    })
-    socket.emit('newUser', { userName, socketID: socket.id, room })
-    navigate('/room')
+    navigate(`/room?id=${room}&user=${userName}`)
   }
 
   return (

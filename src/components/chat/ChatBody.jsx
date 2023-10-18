@@ -1,10 +1,10 @@
 import React, { useContext } from 'react'
 import { useNavigate } from 'react-router-dom'
-// import { GameContext } from '../../contexts/GameContext'
+import { GameContext } from '../../contexts/GameContext'
 
 const ChatBody = ({ messages, typingStatus, lastMessageRef }) => {
   const navigate = useNavigate()
-  // const { userName, setUserName } = useContext(GameContext)
+  const { userName } = useContext(GameContext)
 
   const handleLeaveChat = () => {
     localStorage.removeItem('userName')
@@ -23,7 +23,7 @@ const ChatBody = ({ messages, typingStatus, lastMessageRef }) => {
 
       <div className="message__container">
         {messages.map((message) =>
-          message.name === localStorage.getItem('userName') ? (
+          message.name === userName ? (
             <div className="message__chats" key={message.id}>
               <p className="sender__name">You</p>
               <div className="message__sender">

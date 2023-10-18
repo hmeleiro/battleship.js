@@ -3,10 +3,11 @@ import React, { useState } from 'react'
 export const GameContext = React.createContext()
 
 export function GameContextProvider({ children }) {
-  const [playerOneTurn, setPlayerOneTurn] = useState(true)
+  // const [playerOneTurn, setPlayerOneTurn] = useState(true)
   const [ships, setShips] = useState()
   const [board, setBoard] = useState()
-  const [winner, setWinner] = useState(false)
+  const [gameInfo, setGameInfo] = useState()
+  // const [winner, setWinner] = useState(false)
   const [userName, setUserName] = useState('')
   const [room, setRoom] = useState('')
 
@@ -72,17 +73,17 @@ export function GameContextProvider({ children }) {
   return (
     <GameContext.Provider
       value={{
+        gameInfo,
+        setGameInfo,
         userName,
         setUserName,
         board,
         setBoard,
         ships,
         setShips,
-        playerOneTurn,
         handleClick,
         checkIfSinked,
         checkIfWinner,
-        winner,
         room,
         setRoom
       }}

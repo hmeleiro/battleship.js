@@ -16,13 +16,12 @@ const colors = {
 const theme = extendTheme({ colors })
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
-    <ChakraProvider theme={theme}>
-      <GameContextProvider>
-        <div className="flex w-screen h-screen items-center justify-center">
-          <App />
-        </div>
-      </GameContextProvider>
-    </ChakraProvider>
-  </React.StrictMode>
+  // <React.StrictMode>  </React.StrictMode>
+  <ChakraProvider theme={theme}>
+    <GameContextProvider>
+      <div className="flex w-screen h-screen items-center justify-center">
+        <App />
+      </div>
+    </GameContextProvider>
+  </ChakraProvider>
 )
