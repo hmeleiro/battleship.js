@@ -10,29 +10,24 @@ function Board() {
     setShips,
     board,
     setBoard,
-    startGame,
     checkIfWinner,
     winner
   } = useContext(GameContext)
 
   useEffect(() => {
-    const board = window.localStorage.getItem('board')
-    const ships = window.localStorage.getItem('ships')
+    console.log('Mirando en la base de datos si hay una partida iniciada...')
     if (ships === 'undefined') {
-      startGame()
+      console.log('No la hay. Creando una nueva...')
     } else {
-      setBoard(JSON.parse(board))
-      setShips(JSON.parse(ships))
+      console.log('La hay guardando la información de partida en los estados')
+      // setBoard(JSON.parse(board))
+      // setShips(JSON.parse(ships))
     }
   }, [])
 
   useEffect(() => {
-    window.localStorage.setItem('board', JSON.stringify(board))
-  }, [board])
-
-  useEffect(() => {
-    window.localStorage.setItem('ships', JSON.stringify(ships))
-  }, [ships])
+    console.log('Cambios en información de partida. Guardando en base de datos')
+  }, [board, ships, winner, playerOneTurn])
 
   useEffect(() => {
     if (ships) {
@@ -64,7 +59,11 @@ function Board() {
       </div>
     )
   } else {
-    return <></>
+    return (
+      <div className="flex w-[75%] ml-[3%] h-screen items-center justify-center bg-slate-100">
+        Aquí va el tablero
+      </div>
+    )
   }
 }
 

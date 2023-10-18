@@ -3,7 +3,8 @@ import { useNavigate } from 'react-router-dom'
 import { GameContext } from '../contexts/GameContext'
 
 function Home({ socket }) {
-  const { userName, setUserName, room, setRoom } = useContext(GameContext)
+  const { userName, setUserName, room, setRoom, setBoard, setShips } =
+    useContext(GameContext)
   const navigate = useNavigate()
 
   const handleSubmit = (e) => {
@@ -12,10 +13,11 @@ function Home({ socket }) {
     setUserName(userName)
     setRoom(room)
     socket.emit('join', { userName, room })
-    socket.emit('newUser', { userName, socketID: socket.id, room })
-    socket.on('user-connected', (data) => {
-      console.log(data)
+    socket.on('gameResponse', (data) => {
+      setBoard(data.board)
+      setShips(data.ships)
     })
+    socket.emit('newUser', { userName, socketID: socket.id, room })
     navigate('/room')
   }
 

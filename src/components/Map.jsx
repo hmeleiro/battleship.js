@@ -8,12 +8,15 @@ function Map(props) {
   const enemy = playerOneTurn ? 1 : 0
   const player = playerOneTurn ? 0 : 1
 
-  const enemyShipCells = ships[enemy].ships
+  console.log(ships)
+  const enemyShipCells = ships[enemy]
     .map((ship) => ship.map((cell) => cell))
     .flat()
-  const playerShipCells = ships[player].ships
+  const playerShipCells = ships[player]
     .map((ship) => ship.map((cell) => cell))
     .flat()
+
+  console.log(enemyShipCells)
   return (
     <div className="grid grid-cols-16">
       {board.map((e, i) => {
