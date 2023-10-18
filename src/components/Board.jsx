@@ -2,8 +2,9 @@ import React, { useEffect, useContext } from 'react'
 import ScoreBoard from './ScoreBoard'
 import Map from './Map'
 import { GameContext } from '../contexts/GameContext'
+import { Button } from '@chakra-ui/react'
 
-function Board() {
+function Board({ gameState }) {
   const {
     playerOneTurn,
     ships,

@@ -38,7 +38,7 @@ function Home({ socket }) {
       <label htmlFor="room">Room</label>
       <input
         type="text"
-        minLength={5}
+        minLength={3}
         name="room"
         id="room"
         className="room__input"
