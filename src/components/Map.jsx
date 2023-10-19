@@ -2,21 +2,28 @@ import React, { useContext } from 'react'
 import { GameContext } from '../contexts/GameContext'
 
 function Map(props) {
-  const { board, ships } = props
-  const { playerOneTurn, handleClick } = useContext(GameContext)
+  const { board, ships, socket } = props
+  const { handleClick, userName, gameInfo, emitGameState } =
+    useContext(GameContext)
 
-  const enemy = playerOneTurn ? 1 : 0
-  const player = playerOneTurn ? 0 : 1
+  const playerIndex = gameInfo.players.findIndex((e) => e === userName)
+  const enemyIndex = playerIndex === 0 ? 1 : 0
 
-  console.log(ships)
-  const enemyShipCells = ships[enemy]
+  const isPlayerTurn =
+    (gameInfo.playerOneTurn && playerIndex === 0) ||
+    (!gameInfo.playerOneTurn && playerIndex === 1)
+
+  console.log('playerIndex', playerIndex)
+  console.log('playerOneTurn', gameInfo.playerOneTurn)
+  console.log('isPlayerTurn', isPlayerTurn)
+
+  const enemyShipCells = ships[enemyIndex]
     .map((ship) => ship.map((cell) => cell))
     .flat()
-  const playerShipCells = ships[player]
+  const playerShipCells = ships[playerIndex]
     .map((ship) => ship.map((cell) => cell))
     .flat()
 
-  console.log(enemyShipCells)
   return (
     <div className="grid grid-cols-16">
       {board.map((e, i) => {
@@ -28,13 +35,13 @@ function Map(props) {
           if (enemyCell[0].isHit) {
             cellColor = 'bg-red-700'
           } else {
-            cellColor = 'bg-player1'
+            cellColor = 'bg-gray-300'
           }
         } else if (playerCell.length > 0) {
           if (playerCell[0].isHit) {
             cellColor = 'bg-red-700'
           } else {
-            cellColor = 'bg-player2'
+            cellColor = `bg-player${playerIndex + 1}`
           }
         } else {
           if (e.isHidden) {
@@ -43,11 +50,21 @@ function Map(props) {
             cellColor = 'bg-blue-300'
           }
         }
+
+        const nextTurn = async () => {
+          if (isPlayerTurn) {
+            await handleClick(i)
+            emitGameState(socket)
+          } else {
+            console.log('Turno del otro jugador')
+          }
+        }
+
         return (
           <div
             key={i}
             className={`w-10 h-10 ${cellColor} m-1`}
-            onClick={() => handleClick(i)}
+            onClick={nextTurn}
           ></div>
         )
       })}

@@ -30,6 +30,6 @@ module.exports = {
         properties: 'never'
       }
     ],
-    'spaced-comment': 'never'
+    'spaced-comment': 0
   }
 }

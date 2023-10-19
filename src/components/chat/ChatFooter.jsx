@@ -17,7 +17,7 @@ const ChatFooter = ({ socket }) => {
         name: localStorage.getItem('userName'),
         id: `${socket.id}${Math.random()}`,
         socketID: socket.id,
-        room: room
+        room
       })
     }
     setMessage('')

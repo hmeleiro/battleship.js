@@ -3,11 +3,9 @@ import React, { useState } from 'react'
 export const GameContext = React.createContext()
 
 export function GameContextProvider({ children }) {
-  // const [playerOneTurn, setPlayerOneTurn] = useState(true)
   const [ships, setShips] = useState()
   const [board, setBoard] = useState()
   const [gameInfo, setGameInfo] = useState()
-  // const [winner, setWinner] = useState(false)
   const [userName, setUserName] = useState('')
   const [room, setRoom] = useState('')
 
@@ -15,14 +13,14 @@ export function GameContextProvider({ children }) {
     return ship.filter((e) => !e.isHit).length === 0
   }
 
-  const handleClick = (id) => {
-    const enemy = playerOneTurn ? 1 : 0
-    const player = playerOneTurn ? 0 : 1
+  const handleClick = async (id) => {
+    const playerIndex = gameInfo.players.findIndex((e) => e === userName)
+    const enemyIndex = playerIndex === 0 ? 1 : 0
 
-    const enemyShipCells = ships[enemy]
+    const enemyShipCells = ships[enemyIndex]
       .map((ship) => ship.map((cell) => cell.id))
       .flat()
-    const playerShipCells = ships[player]
+    const playerShipCells = ships[playerIndex]
       .map((ship) => ship.map((cell) => cell.id))
       .flat()
 
@@ -36,7 +34,7 @@ export function GameContextProvider({ children }) {
       setShips((prev) => {
         const updatedShips = [...prev]
 
-        updatedShips[enemy].map((ship) =>
+        updatedShips[enemyIndex].map((ship) =>
           ship.map((cell) => {
             if (cell.id === id) {
               cell.isHit = true
@@ -58,14 +56,45 @@ export function GameContextProvider({ children }) {
         setBoard(updatedBoard)
       })
     }
-    setPlayerOneTurn((prev) => !prev)
+
+    // setGameInfo((prev) => {
+    //   let updatedGameInfo = { ...prev }
+    //   updatedGameInfo = {
+    //     ...updatedGameInfo,
+    //     playerOneTurn: !updatedGameInfo.playerOneTurn,
+    //     step: (updatedGameInfo.step += 1)
+    //   }
+    //   console.log(updatedGameInfo)
+    //   return updatedGameInfo
+    // })
+  }
+
+  const emitGameState = (socket) => {
+    if (!gameInfo) return
+    console.log('Emiting gameState')
+    console.log(gameInfo)
+    console.log(ships)
+    const { playerOneTurn, winner, players, step } = gameInfo
+    const gameState = {
+      room,
+      board,
+      ships,
+      players,
+      playerOneTurn,
+      winner,
+      step
+    }
+    socket.emit('nextTurn', gameState)
   }
 
   const checkIfWinner = () => {
     ships.forEach((player) => {
       const shipsRemaining = player.filter((ship) => !checkIfSinked(ship))
       if (shipsRemaining.length === 0) {
-        setWinner(player.player === 2 ? 1 : 2)
+        setGameInfo((prev) => ({
+          ...prev,
+          winner: player.player === 2 ? 1 : 2
+        }))
       }
     })
   }
@@ -85,7 +114,8 @@ export function GameContextProvider({ children }) {
         checkIfSinked,
         checkIfWinner,
         room,
-        setRoom
+        setRoom,
+        emitGameState
       }}
     >
       {children}{' '}

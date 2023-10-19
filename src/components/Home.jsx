@@ -3,8 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { GameContext } from '../contexts/GameContext'
 
 function Home({ socket }) {
-  const { userName, setUserName, room, setRoom, setBoard, setShips } =
-    useContext(GameContext)
+  const { userName, setUserName, room, setRoom } = useContext(GameContext)
   const navigate = useNavigate()
 
   const handleSubmit = (e) => {

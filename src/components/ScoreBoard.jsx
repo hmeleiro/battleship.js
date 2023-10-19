@@ -3,8 +3,6 @@ import { GameContext } from '../contexts/GameContext'
 
 function ScoreBoard() {
   const { ships, checkIfSinked, gameInfo } = useContext(GameContext)
-
-  console.log(gameInfo)
   const { players } = gameInfo
   return (
     <div className="flex flex-col ml-5">
@@ -19,6 +17,7 @@ function ScoreBoard() {
                     const cellColor = checkIfSinked(ship)
                       ? 'bg-red-600'
                       : 'bg-slate-400'
+
                     return (
                       <div
                         className={`w-4 h-4 mr-1 mt-1 ${cellColor}`}

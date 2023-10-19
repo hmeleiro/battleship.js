@@ -6,20 +6,22 @@ import { useSearchParams } from 'react-router-dom'
 
 function Room({ socket }) {
   const {
-    userName,
     setUserName,
-    room,
     setRoom,
+    ships,
     setShips,
     setBoard,
-    setGameInfo
+    gameInfo,
+    setGameInfo,
+    checkIfWinner
   } = useContext(GameContext)
-  const [searchParams, setSearchParams] = useSearchParams()
+  const [searchParams] = useSearchParams()
   const [roomFullError, setRoomFullError] = useState(false)
+  const [waitingForSecondPlayer, setWaitingForSecondPlayer] = useState(true)
 
   useEffect(() => {
     const roomId = searchParams.get('id')
-    var user = searchParams.get('user')
+    let user = searchParams.get('user')
     user = user === '' ? 'wu-ming' : user
     localStorage.setItem('userName', user)
     socket.emit('join', { userName: user, room: roomId })
@@ -28,33 +30,56 @@ function Room({ socket }) {
       console.log(data)
       setRoomFullError(true)
     })
-    socket.on('gameResponse', (data) => {
-      console.log(data)
-      const { board, ships, room, players, winner, playerOneTurn } = data
+
+    setUserName(user)
+    socket.on('gameState', (data) => {
+      const { board, ships, room, players, winner, playerOneTurn, step } = data
       setBoard(board)
       setShips(ships)
       setRoom(room)
-      setGameInfo({ players, winner, playerOneTurn })
+      setGameInfo({ players, winner, playerOneTurn, step })
     })
-    setUserName(user)
 
-    socket.emit('newUser', { userName, socketID: socket.id, room })
+    socket.on('newGameState', (data) => {
+      const { board, ships, room, players, winner, playerOneTurn, step } = data
+      setBoard(board)
+      setShips(ships)
+      setRoom(room)
+      console.log('playerOneTurn in Room component:', playerOneTurn)
+      setGameInfo({ players, winner, playerOneTurn, step })
+    })
   }, [])
 
-  // useEffect(() => {
-  //   const gameState = {
-  //     ships,
-  //     board,
-  //     winner,
-  //     playerOneTurn
-  //   }
+  socket.on('secondPlayerConnected', (data) => {
+    setWaitingForSecondPlayer(false)
+  })
 
-  //   socket.emit('newUser', {
-  //     socketID: socket.id,
-  //     room: room,
-  //     gameState
-  //   })
-  // }, [ships, board, winner, playerOneTurn])
+  // useEffect(() => {
+  //   console.log('Mirando en la base de datos si hay una partida iniciada...')
+  //   if (ships === 'undefined') {
+  //     console.log('No la hay. Creando una nueva...')
+  //   } else {
+  //     console.log('La hay guardando la información de partida en los estados')
+  //     // setBoard(JSON.parse(board))
+  //     // setShips(JSON.parse(ships))
+  //   }
+  // }, [])
+
+  useEffect(() => {
+    if (ships) {
+      checkIfWinner()
+    }
+  }, [gameInfo])
+
+  if (gameInfo?.winner) {
+    console.log(gameInfo.winner)
+
+    return (
+      <div className="flex">
+        <h1>Ha ganado el jugador {gameInfo.winner}</h1>
+      </div>
+    )
+  }
 
   if (roomFullError) {
     return (
@@ -62,9 +87,17 @@ function Room({ socket }) {
     )
   }
 
+  if (waitingForSecondPlayer) {
+    return (
+      <div className="flex flex-row w-screen justify-center">
+        WAITING FOR SECOND PLAYER
+      </div>
+    )
+  }
+
   return (
     <div className="flex flex-row w-screen">
-      <Board />
+      <Board socket={socket} />
       <Chat socket={socket} />
     </div>
   )
