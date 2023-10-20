@@ -13,10 +13,6 @@ function Map(props) {
     (gameInfo.playerOneTurn && playerIndex === 0) ||
     (!gameInfo.playerOneTurn && playerIndex === 1)
 
-  console.log('playerIndex', playerIndex)
-  console.log('playerOneTurn', gameInfo.playerOneTurn)
-  console.log('isPlayerTurn', isPlayerTurn)
-
   const enemyShipCells = ships[enemyIndex]
     .map((ship) => ship.map((cell) => cell))
     .flat()
@@ -53,13 +49,14 @@ function Map(props) {
 
         const nextTurn = async () => {
           if (isPlayerTurn) {
-            await handleClick(i)
-            emitGameState(socket)
+            const ownShipClicked = await handleClick(i)
+            if (!ownShipClicked) {
+              emitGameState(socket)
+            }
           } else {
             console.log('Turno del otro jugador')
           }
         }
-
         return (
           <div
             key={i}

@@ -45,7 +45,6 @@ function Room({ socket }) {
       setBoard(board)
       setShips(ships)
       setRoom(room)
-      console.log('playerOneTurn in Room component:', playerOneTurn)
       setGameInfo({ players, winner, playerOneTurn, step })
     })
   }, [])

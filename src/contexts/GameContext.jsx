@@ -25,8 +25,7 @@ export function GameContextProvider({ children }) {
       .flat()
 
     if (playerShipCells.includes(id)) {
-      console.log('Own ship')
-      return
+      return true
     }
 
     const isHit = enemyShipCells.includes(id)
@@ -56,24 +55,11 @@ export function GameContextProvider({ children }) {
         setBoard(updatedBoard)
       })
     }
-
-    // setGameInfo((prev) => {
-    //   let updatedGameInfo = { ...prev }
-    //   updatedGameInfo = {
-    //     ...updatedGameInfo,
-    //     playerOneTurn: !updatedGameInfo.playerOneTurn,
-    //     step: (updatedGameInfo.step += 1)
-    //   }
-    //   console.log(updatedGameInfo)
-    //   return updatedGameInfo
-    // })
+    return false
   }
 
   const emitGameState = (socket) => {
     if (!gameInfo) return
-    console.log('Emiting gameState')
-    console.log(gameInfo)
-    console.log(ships)
     const { playerOneTurn, winner, players, step } = gameInfo
     const gameState = {
       room,

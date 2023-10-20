@@ -2,6 +2,7 @@ import React from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Home from './components/Home'
 import Room from './components/Room'
+import Playground from './components/Playground'
 import socketIO from 'socket.io-client'
 const socket = socketIO.connect('/')
 
@@ -12,6 +13,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home socket={socket} />}></Route>
           <Route path="/room" element={<Room socket={socket} />}></Route>
+          <Route path="/test" element={<Playground />}></Route>
         </Routes>
       </div>
     </BrowserRouter>
