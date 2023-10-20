@@ -1,7 +1,7 @@
 import React from 'react'
-import Map from './Map2'
+// import Map from './Map2'
 
-function range(start, stop, step) {
+const range = (start, stop, step) => {
   if (typeof stop === 'undefined') {
     // one param defined
     stop = start
@@ -24,7 +24,7 @@ function range(start, stop, step) {
   return result
 }
 
-function randomShip(boardCells, shipLength) {
+const randomShip = (boardCells, shipLength) => {
   //   function getRandomInt(min, max) {
   //     return Math.floor(Math.random() * (max - min + 1)) + min
   //   }
@@ -62,70 +62,11 @@ const generateBoardCells = () => {
 function startGame() {
   //   var boardCells = Array.from(Array(255).keys())
   const board = generateBoardCells()
-  var boardCells = board.map((e) => e.id)
+  const boardCells = board.map((e) => e.id)
   const ships1 = generateShips(boardCells)
   const ships2 = generateShips(boardCells)
   const ships = [ships1, ships2]
   return { board, ships }
-}
-
-const generateBoardDivs = (board, ships, gridSize) => {
-  const playerIndex = 0
-  const enemyIndex = 1
-
-  const enemyShipCells = ships[enemyIndex]
-    .map((ship) => ship.map((cell) => cell))
-    .flat()
-  const playerShipCells = ships[playerIndex]
-    .map((ship) => ship.map((cell) => cell))
-    .flat()
-  const html = []
-  let col = 0
-  let row = 0
-  for (let i = 0; i < gridSize * gridSize; i++) {
-    const boardCell = board[i]
-    let cellColor = ''
-    const enemyCell = enemyShipCells.filter((c) => c.id === boardCell.id)
-    const playerCell = playerShipCells.filter((c) => c.id === boardCell.id)
-
-    if (enemyCell.length > 0) {
-      if (enemyCell[0].isHit) {
-        cellColor = 'bg-red-700'
-      } else {
-        cellColor = `bg-player1`
-      }
-    } else if (playerCell.length > 0) {
-      if (playerCell[0].isHit) {
-        cellColor = 'bg-red-700'
-      } else {
-        cellColor = `bg-player2`
-      }
-    } else {
-      if (boardCell.isHidden) {
-        cellColor = 'bg-gray-300'
-      } else {
-        cellColor = 'bg-blue-300'
-      }
-    }
-
-    html.push(
-      <div
-        key={i}
-        className={`flex w-10 h-10 ${cellColor} m-1 items-center justify-center text-white`}
-        data-x={col}
-        data-y={row}
-      >
-        {i}{' '}
-      </div>
-    )
-    if (col < gridSize - 1) {
-      col += 1
-    } else {
-      row += 1
-      col = 0
-    }
-  }
-  return html
 }
 
 function Playground({ socket }) {
