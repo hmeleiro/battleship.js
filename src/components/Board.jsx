@@ -16,6 +16,7 @@ function Board({ socket }) {
             {gameInfo.players[playerInTurnIndex]}
           </span>{' '}
         </h1>
+        {/* <div className="grid grid-cols-16">{map}</div> */}
         <Map board={board} ships={ships} socket={socket} />
         <ScoreBoard />
       </div>

@@ -85,6 +85,81 @@ export function GameContextProvider({ children }) {
     })
   }
 
+  const generateBoardDivs = (board, ships, socket, gridSize = 16) => {
+    const playerIndex = gameInfo.players.findIndex((e) => e === userName)
+    const enemyIndex = playerIndex === 0 ? 1 : 0
+
+    const isPlayerTurn =
+      (gameInfo.playerOneTurn && playerIndex === 0) ||
+      (!gameInfo.playerOneTurn && playerIndex === 1)
+
+    const enemyShipCells = ships[enemyIndex]
+      .map((ship) => ship.map((cell) => cell))
+      .flat()
+    const playerShipCells = ships[playerIndex]
+      .map((ship) => ship.map((cell) => cell))
+      .flat()
+    const html = []
+    let col = 0
+    let row = 0
+    for (let i = 0; i < gridSize * gridSize; i++) {
+      const boardCell = board[i]
+      let cellColor = ''
+      const enemyCell = enemyShipCells.filter((c) => c.id === boardCell.id)
+      const playerCell = playerShipCells.filter((c) => c.id === boardCell.id)
+
+      if (enemyCell.length > 0) {
+        if (enemyCell[0].isHit) {
+          cellColor = 'bg-red-700'
+        } else {
+          cellColor = `bg-player1`
+        }
+      } else if (playerCell.length > 0) {
+        if (playerCell[0].isHit) {
+          cellColor = 'bg-red-700'
+        } else {
+          cellColor = `bg-player2`
+        }
+      } else {
+        if (boardCell.isHidden) {
+          cellColor = 'bg-gray-300'
+        } else {
+          cellColor = 'bg-blue-300'
+        }
+      }
+
+      const nextTurn = async () => {
+        if (isPlayerTurn) {
+          const ownShipClicked = await handleClick(i)
+          if (!ownShipClicked) {
+            emitGameState(socket)
+          }
+        } else {
+          console.log('Turno del otro jugador')
+        }
+      }
+
+      html.push(
+        <div
+          key={i}
+          className={`flex w-10 h-10 ${cellColor} m-1 items-center justify-center text-white text-xs`}
+          data-x={col}
+          data-y={row}
+          onClick={nextTurn}
+        >
+          {i}{' '}
+        </div>
+      )
+      if (col < gridSize - 1) {
+        col += 1
+      } else {
+        row += 1
+        col = 0
+      }
+    }
+    return html
+  }
+
   return (
     <GameContext.Provider
       value={{
@@ -94,6 +169,7 @@ export function GameContextProvider({ children }) {
         setUserName,
         board,
         setBoard,
+        generateBoardDivs,
         ships,
         setShips,
         handleClick,
